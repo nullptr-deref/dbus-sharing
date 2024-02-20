@@ -1,4 +1,4 @@
-#include "./sharingservice.hpp"
+#include "./sharing.hpp"
 
 #include <sdbus-c++/sdbus-c++.h>
 
