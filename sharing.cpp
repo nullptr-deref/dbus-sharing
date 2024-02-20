@@ -109,5 +109,7 @@ ipc::EndpointInfo ipc::SharingService::getEndpointInfoByName(const std::string &
 
 void ipc::SharingService::launchEndpointService(const std::string &serviceName, const std::string &filepath) const {
     const auto &endpointExecPath = m_endpoints.at(serviceName).executablePath;
-    ::execl(endpointExecPath.c_str(), endpointExecPath.c_str(), filepath.c_str(), nullptr);
+    if (checkExtensionCompatibility(filepath)) {
+        ::execl(endpointExecPath.c_str(), endpointExecPath.c_str(), filepath.c_str(), nullptr);
+    }
 }
