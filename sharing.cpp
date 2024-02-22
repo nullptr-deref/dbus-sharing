@@ -25,7 +25,7 @@ ipc::SharingService::SharingService(const std::string &configPath) {
     m_connection = sdbus::createSessionBusConnection(sharingConnectionName);
 
     constexpr const char *objPath = "/org/rt/router";
-    constexpr const char *interfaceName = "ort.rt.SharingService";
+    constexpr const char *interfaceName = "org.rt.SharingService";
     auto router = sdbus::createObject(*m_connection, objPath);
     auto routeFunc = [this](const std::string &endpointName, const std::string &filepath) -> void {
         this->routeFileToEndpoint(endpointName, filepath);
@@ -108,8 +108,9 @@ ipc::EndpointInfo ipc::SharingService::getEndpointInfoByName(const std::string &
 }
 
 void ipc::SharingService::launchEndpointService(const std::string &serviceName, const std::string &filepath) const {
+    const auto endpoint = m_endpoints.at(serviceName);
     const auto &endpointExecPath = m_endpoints.at(serviceName).executablePath;
-    if (checkExtensionCompatibility(filepath)) {
-        ::execl(endpointExecPath.c_str(), endpointExecPath.c_str(), filepath.c_str(), nullptr);
+    if (checkExtensionCompatibility(endpoint, filepath)) {
+        ::execl(endpoint.executablePath.c_str(), endpoint.executablePath.c_str(), filepath.c_str(), nullptr);
     }
 }
