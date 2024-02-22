@@ -1,0 +1,10 @@
+[Unit]
+Description=Service for maintaining file sharing across applications
+
+[Service]
+Type=dbus
+BusName=org.rt.sharing
+ExecStart=/usr/bin/sharing
+
+[Install]
+WantedBy=multi-user.target
