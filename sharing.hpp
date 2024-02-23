@@ -11,10 +11,8 @@ bool checkExtensionCompatibility(const std::string &filepath);
 
 namespace ipc {
     struct EndpointInfo {
+        std::string name;
         std::string executablePath;
-        // std::string dbusWellKnownName;
-        // std::string dbusObjectPath;
-        // std::string dbusInterface;
         std::shared_ptr<std::vector<std::string>> acceptedFormats = nullptr;
     };
 

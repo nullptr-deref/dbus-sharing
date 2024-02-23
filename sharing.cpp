@@ -35,8 +35,12 @@ ipc::SharingService::SharingService(const std::string &configPath) {
         router->emitSignal("endpointsReady").onInterface(interfaceName).withArguments(endpointsList);
         return endpointsList;
     };
+    auto getEndpointFormats = [this](const std::string &endpointName) -> std::vector<std::string> {
+        return *this->getEndpointInfoByName(endpointName).acceptedFormats;
+    };
     router->registerMethod("getEndpoints").onInterface(interfaceName).implementedAs(std::move(getEndpointsFunc));
     router->registerMethod("passFileForProcessing").onInterface(interfaceName).implementedAs(std::move(routeFunc));
+    router->registerMethod("getEndpointFormats").onInterface(interfaceName).implementedAs(std::move(getEndpointFormats));
     router->registerSignal("endpointsReady").onInterface(interfaceName).withParameters<std::vector<std::string>>();
     router->finishRegistration();
 
@@ -68,6 +72,7 @@ void ipc::SharingService::readConfig(const std::string &configPath) {
             const std::size_t nameLen = line.find(']') - nameBegin;
             appName = line.substr(nameBegin, nameLen);
             m_endpoints.insert_or_assign(appName, EndpointInfo{});
+            m_endpoints.at(appName).name = appName;
             continue;
         }
         if (line.starts_with("formats")) {
